@@ -10,7 +10,13 @@
     "test": "graph test",
     "build:mumbai": "graph build ./mumbaiSubgraph.yaml",
     "deploy:mumbai": "graph deploy --node https://api.thegraph.com/deploy/ skjaldbaka17/mumbai---icr-credit-holders ./mumbaiSubgraph.yaml",
-    "build:deploy:mumbai": "npm run build:mumbai && npm run deploy:mumbai"
+    "build:deploy:mumbai": "npm run build:mumbai && npm run deploy:mumbai",
+    "build:polygon": "graph build ./polygonSubgraph.yaml",
+    "deploy:polygon": "graph deploy --node https://api.thegraph.com/deploy/ skjaldbaka17/polygon---icr-credit-holders ./polygonSubgraph.yaml",
+    "build:deploy:polygon": "npm run build:polygon && npm run deploy:polygon",
+    "build:polygon:test": "graph build ./polygonTestSubgraph.yaml",
+    "deploy:polygon:test": "graph deploy --node https://api.thegraph.com/deploy/ skjaldbaka17/test-poly---icr-credit-holders ./polygonTestSubgraph.yaml",
+    "build:deploy:polygon:test": "npm run build:polygon:test && npm run deploy:polygon:test"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.68.5",

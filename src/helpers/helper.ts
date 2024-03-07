@@ -44,7 +44,14 @@ export function createProjectCreated(
 
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
 export function isNullAddress(address: Bytes): bool {
-  return Address.fromBytes(address) === Address.fromHexString(ADDRESS_ZERO);
+  return Address.fromBytes(address) == Address.fromHexString(ADDRESS_ZERO);
+}
+
+export function bigDecimalDecimal(decimals: number): BigDecimal {
+  let one = "1";
+  let zero = "0";
+  let num = one + zero.repeat(i32(decimals));
+  return BigDecimal.fromString(num);
 }
 
 export function handleTransfer(entity: Transfer): void {
@@ -134,10 +141,13 @@ export function handleTransfer(entity: Transfer): void {
         );
         senderAccountBalance.decimalBalance =
           senderAccountBalance.decimalBalance.minus(
-            entity.value
-              .toBigDecimal()
-              .div(BigDecimal.fromString(asset.decimals.toString()))
+            entity.value.toBigDecimal().div(bigDecimalDecimal(asset.decimals))
           );
+      }
+
+      if (isNullAddress(entity.to)) {
+        asset.supply = asset.supply.minus(entity.value);
+        asset.save();
       }
 
       senderAccountBalance.save();
@@ -147,9 +157,7 @@ export function handleTransfer(entity: Transfer): void {
       );
       receiverAccountBalance.decimalBalance =
         receiverAccountBalance.decimalBalance.plus(
-          entity.value
-            .toBigDecimal()
-            .div(BigDecimal.fromString(asset.decimals.toString()))
+          entity.value.toBigDecimal().div(bigDecimalDecimal(asset.decimals))
         );
 
       receiverAccountBalance.save();
