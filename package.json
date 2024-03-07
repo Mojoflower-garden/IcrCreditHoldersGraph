@@ -4,15 +4,19 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ skjaldbaka17/mumbai---icr-credit-holders",
     "create-local": "graph create --node http://localhost:8020/ skjaldbaka17/mumbai---icr-credit-holders",
     "remove-local": "graph remove --node http://localhost:8020/ skjaldbaka17/mumbai---icr-credit-holders",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 skjaldbaka17/mumbai---icr-credit-holders",
-    "test": "graph test"
+    "test": "graph test",
+    "build:mumbai": "graph build ./mumbaiSubgraph.yaml",
+    "deploy:mumbai": "graph deploy --node https://api.thegraph.com/deploy/ skjaldbaka17/mumbai---icr-credit-holders ./mumbaiSubgraph.yaml",
+    "build:deploy:mumbai": "npm run build:mumbai && npm run deploy:mumbai"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.68.5",
     "@graphprotocol/graph-ts": "0.32.0"
   },
-  "devDependencies": { "matchstick-as": "0.5.0" }
+  "devDependencies": {
+    "matchstick-as": "0.5.0"
+  }
 }

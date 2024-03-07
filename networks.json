@@ -3,6 +3,15 @@
     "CarbonContractRegistry": {
       "address": "0x825CcCB05D82fcD0381E523116A03b9301E91C61",
       "startBlock": 34581332
+    },
+    "Contract": {
+      "address": "0x65A9f112C0DcCCE90581626Dc965Dc170b9B27d5"
+    },
+    "ProjectContract": {
+      "address": "0x65A9f112C0DcCCE90581626Dc965Dc170b9B27d5"
+    },
+    "ProjectReg": {
+      "address": "0x825CcCB05D82fcD0381E523116A03b9301E91C61"
     }
   }
 }

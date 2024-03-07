@@ -1,0 +1,78 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: CarbonContractRegistry
+    network: mumbai
+    source:
+      address: "0x825CcCB05D82fcD0381E523116A03b9301E91C61"
+      abi: CarbonContractRegistry
+      # startBlock: 34581332
+      startBlock: 45693318
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - ProjectCreated
+        - Activity
+        - Project
+      abis:
+        - name: CarbonContractRegistry
+          file: ./abis/CarbonContractRegistry.json
+      eventHandlers:
+        - event: ProjectCreated(indexed uint256,indexed address,string)
+          handler: handleProjectCreated
+      file: ./src/carbon-contract-registry.ts
+templates:
+  - kind: ethereum
+    name: ProjectContract
+    network: mumbai
+    source:
+      abi: ProjectContract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - AdminClawback
+        - CancelledCredits
+        - ExAnteMinted
+        - ExPostCreated
+        - ExPostVerifiedAndMinted
+        - ExchangeAnteForPost
+        - Transfer
+        - VintageMitigationEstimateChanged
+        - Activity
+        - Asset
+        - Account
+        - AccountBalance
+        - Retirement
+      abis:
+        - name: ProjectContract
+          file: ./abis/ProjectContract.json
+      eventHandlers:
+        - event: AdminClawback(indexed address,address,indexed uint256,uint256,indexed uint8)
+          handler: handleAdminClawback
+        - event: CancelledCredits(indexed address,indexed uint256,uint256,string,bytes)
+          handler: handleCancelledCredits
+        - event: ExAnteMinted(indexed uint256,indexed uint256,indexed address,uint256)
+          handler: handleExAnteMinted
+        - event: ExPostCreated(indexed uint256,uint256,uint256,uint256,string)
+          handler: handleExPostCreated
+        - event: ExPostVerifiedAndMinted(indexed uint256,uint256,uint256,uint256,uint256,string)
+          handler: handleExPostVerifiedAndMinted
+        - event: ExchangeAnteForPost(indexed address,indexed uint256,uint256,uint256)
+          handler: handleExchangeAnteForPost
+        - event: RetiredVintage(indexed address,indexed uint256,uint256,uint256,bytes)
+          handler: handleRetiredVintage
+        - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
+          handler: handleTransferBatch
+        - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleTransferSingle
+        - event: VintageMitigationEstimateChanged(indexed uint256,uint256,uint256,indexed uint8)
+          handler: handleVintageMitigationEstimateChanged
+      file: ./src/project-contract.ts

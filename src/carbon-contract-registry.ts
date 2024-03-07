@@ -1,46 +1,18 @@
-import {
-  AdminChanged as AdminChangedEvent,
-  BeaconUpgraded as BeaconUpgradedEvent,
-  Upgraded as UpgradedEvent
-} from "../generated/CarbonContractRegistry/CarbonContractRegistry"
-import { AdminChanged, BeaconUpgraded, Upgraded } from "../generated/schema"
+import { Project } from "../generated/schema";
+import { ProjectCreated as ProjectCreatedEvent } from "../generated/CarbonContractRegistry/CarbonContractRegistry";
 
-export function handleAdminChanged(event: AdminChangedEvent): void {
-  let entity = new AdminChanged(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.previousAdmin = event.params.previousAdmin
-  entity.newAdmin = event.params.newAdmin
+import { ProjectContract as ProjectTemplate } from "../generated/templates";
+import { createProjectCreated } from "./helpers/helper";
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleBeaconUpgraded(event: BeaconUpgradedEvent): void {
-  let entity = new BeaconUpgraded(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.beacon = event.params.beacon
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleUpgraded(event: UpgradedEvent): void {
-  let entity = new Upgraded(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.implementation = event.params.implementation
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+export function handleProjectCreated(event: ProjectCreatedEvent): void {
+  let entity = new Project(event.params.projectAddress);
+  entity.projectId = event.params.projectId;
+  entity.projectAddress = event.params.projectAddress;
+  entity.projectName = event.params.projectName;
+  entity.blockNumber = event.block.number;
+  entity.blockTimestamp = event.block.timestamp;
+  entity.transactionHash = event.transaction.hash;
+  ProjectTemplate.create(event.params.projectAddress);
+  entity.save();
+  createProjectCreated(event, entity.id);
 }
