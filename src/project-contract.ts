@@ -37,6 +37,7 @@ export function handleAdminClawback(event: AdminClawbackEvent): void {
   );
   entity.from = event.params.from;
   entity.to = event.params.to;
+  entity.projectAddress = event.address;
   entity.tokenId = event.params.tokenId;
   entity.amount = event.params.amount;
   entity.reason = event.params.reason;
