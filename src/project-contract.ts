@@ -23,12 +23,15 @@ import {
   Transfer,
   Asset,
   Vintage,
+  Account,
+  AccountBalance,
 } from "../generated/schema";
 import {
   handleTransfer,
   createActivity,
   getAssetId,
   getVintageId,
+  getAccountBalanceId,
 } from "./helpers/helper";
 
 export function handleAdminClawback(event: AdminClawbackEvent): void {
@@ -307,9 +310,29 @@ export function handleRetiredVintage(event: RetiredVintageEvent): void {
   retirementAsset.decimals = 0;
   retirementAsset.serialization = vintage !== null ? vintage.serialization : "";
   retirementAsset.type = "RetirementCertificate";
-  retirementAsset.supply = event.params.amount;
+  retirementAsset.supply = BigInt.fromI32(1);
   retirementAsset.vintage = getVintageId(event.params.tokenId, event.address);
   retirementAsset.save();
+
+  let retireeAccount = Account.load(event.params.account.toHexString());
+  if (retireeAccount == null) {
+    retireeAccount = new Account(event.params.account.toHexString());
+    retireeAccount.save();
+  }
+
+  const accountBalance = new AccountBalance(
+    getAccountBalanceId(retirementAsset.id, retireeAccount.id)
+  );
+
+  accountBalance.account = retireeAccount.id;
+  accountBalance.asset = retirementAsset.id;
+
+  accountBalance.accountAddress = event.params.account;
+  accountBalance.balance = BigInt.fromI32(1);
+  accountBalance.decimalBalance = BigDecimal.fromString(
+    event.params.amount.toString()
+  );
+  accountBalance.save();
 
   let entity = new Retirement(
     event.transaction.hash.concatI32(event.logIndex.toI32())
