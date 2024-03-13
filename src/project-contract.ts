@@ -153,7 +153,6 @@ export function handleExAnteMinted(event: ExAnteMintedEvent): void {
       exAnteAsset.save();
     }
 
-    exAnteAsset.supply = exAnteAsset.supply.plus(event.params.amount);
     exAnteAsset.save();
   }
 
@@ -161,7 +160,6 @@ export function handleExAnteMinted(event: ExAnteMintedEvent): void {
     event.address,
     "ExAnteMinted",
     entity.id,
-
     event.block.number,
     event.block.timestamp,
     event.transaction.hash,

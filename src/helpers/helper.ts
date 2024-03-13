@@ -149,6 +149,11 @@ export function handleTransfer(entity: Transfer): void {
         asset.supply = asset.supply.minus(entity.value);
         asset.save();
       }
+      if (isNullAddress(entity.from)) {
+        // exAnteAsset.supply = exAnteAsset.supply.plus(event.params.amount);
+        asset.supply = asset.supply.plus(entity.value);
+        asset.save();
+      }
 
       senderAccountBalance.save();
 
