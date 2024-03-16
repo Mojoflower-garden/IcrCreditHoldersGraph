@@ -249,8 +249,8 @@ export class Vintage extends Entity {
     this.set("totalRetiredAmount", Value.fromBigDecimal(value));
   }
 
-  get totalCancelledAmount(): BigDecimal {
-    let value = this.get("totalCancelledAmount");
+  get totalExPostCancelledAmount(): BigDecimal {
+    let value = this.get("totalExPostCancelledAmount");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -258,8 +258,21 @@ export class Vintage extends Entity {
     }
   }
 
-  set totalCancelledAmount(value: BigDecimal) {
-    this.set("totalCancelledAmount", Value.fromBigDecimal(value));
+  set totalExPostCancelledAmount(value: BigDecimal) {
+    this.set("totalExPostCancelledAmount", Value.fromBigDecimal(value));
+  }
+
+  get totalExAnteCancelledAmount(): BigDecimal {
+    let value = this.get("totalExAnteCancelledAmount");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set totalExAnteCancelledAmount(value: BigDecimal) {
+    this.set("totalExAnteCancelledAmount", Value.fromBigDecimal(value));
   }
 
   get retirementCertificates(): RetirementLoader {

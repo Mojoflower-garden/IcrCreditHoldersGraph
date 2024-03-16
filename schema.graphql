@@ -21,7 +21,8 @@ type Vintage @entity {
   serialization: String!
   estimatedAmount: BigInt!
   totalRetiredAmount: BigDecimal!
-  totalCancelledAmount: BigDecimal!
+  totalExPostCancelledAmount: BigDecimal!
+  totalExAnteCancelledAmount: BigDecimal!
 
   retirementCertificates: [Retirement!] @derivedFrom(field: "vintage")
   assets: [Asset!]! @derivedFrom(field: "vintage")

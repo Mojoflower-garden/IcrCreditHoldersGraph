@@ -6,11 +6,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: CarbonContractRegistry
-    network: matic
+    network: mumbai
     source:
-      address: "0x9f87988FF45E9b58ae30fA1685088460125a7d8A"
+      address: "0x825CcCB05D82fcD0381E523116A03b9301E91C61"
       abi: CarbonContractRegistry
-      startBlock: 42035067
+      startBlock: 34581332
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -29,7 +29,7 @@ dataSources:
 templates:
   - kind: ethereum
     name: ProjectContract
-    network: matic
+    network: mumbai
     source:
       abi: ProjectContract
     mapping:
