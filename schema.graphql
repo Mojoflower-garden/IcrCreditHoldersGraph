@@ -25,6 +25,7 @@ type Vintage @entity {
   totalExAnteCancelledAmount: BigDecimal!
 
   retirementCertificates: [Retirement!] @derivedFrom(field: "vintage")
+  cancellations: [CancelledCredits!] @derivedFrom(field: "vintage")
   assets: [Asset!]! @derivedFrom(field: "vintage")
 
   project: Project!
@@ -58,6 +59,7 @@ type Asset @entity {
   retirementCertificate: Retirement @derivedFrom(field: "asset")
   transfers: [Transfer!]! @derivedFrom(field: "asset")
   vintage: Vintage!
+  cancelledCredits: [CancelledCredits!]! @derivedFrom(field: "asset")
 }
 
 """
@@ -162,6 +164,8 @@ type CancelledCredits @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+
+  vintage: Vintage
 
   project: Project
   asset: Asset

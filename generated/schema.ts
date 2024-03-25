@@ -283,6 +283,14 @@ export class Vintage extends Entity {
     );
   }
 
+  get cancellations(): CancelledCreditsLoader {
+    return new CancelledCreditsLoader(
+      "Vintage",
+      this.get("id")!.toString(),
+      "cancellations",
+    );
+  }
+
   get assets(): AssetLoader {
     return new AssetLoader("Vintage", this.get("id")!.toString(), "assets");
   }
@@ -470,6 +478,14 @@ export class Asset extends Entity {
 
   set vintage(value: string) {
     this.set("vintage", Value.fromString(value));
+  }
+
+  get cancelledCredits(): CancelledCreditsLoader {
+    return new CancelledCreditsLoader(
+      "Asset",
+      this.get("id")!.toString(),
+      "cancelledCredits",
+    );
   }
 }
 
@@ -1504,6 +1520,23 @@ export class CancelledCredits extends Entity {
 
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get vintage(): string | null {
+    let value = this.get("vintage");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set vintage(value: string | null) {
+    if (!value) {
+      this.unset("vintage");
+    } else {
+      this.set("vintage", Value.fromString(<string>value));
+    }
   }
 
   get project(): Bytes | null {
