@@ -149,6 +149,11 @@ export function handleTransfer(entity: Transfer): void {
         asset.supply = asset.supply.minus(entity.value);
         asset.save();
       }
+      if (isNullAddress(entity.from)) {
+        // exAnteAsset.supply = exAnteAsset.supply.plus(event.params.amount);
+        asset.supply = asset.supply.plus(entity.value);
+        asset.save();
+      }
 
       senderAccountBalance.save();
 
@@ -186,34 +191,34 @@ export function createActivity(
   entity.account = extrasAccount;
   entity.asset = extrasAsset;
 
-  if (type === "ProjectCreated") {
+  if (type == "ProjectCreated") {
     entity.project = activityId;
   }
-  if (type === "AdminClawback") {
+  if (type == "AdminClawback") {
     entity.adminClawback = activityId;
   }
-  if (type === "CancelledCredits") {
+  if (type == "CancelledCredits") {
     entity.cancelledCredits = activityId;
   }
-  if (type === "ExAnteMinted") {
+  if (type == "ExAnteMinted") {
     entity.exAnteMinted = activityId;
   }
-  if (type === "ExPostCreated") {
+  if (type == "ExPostCreated") {
     entity.exPostCreated = activityId;
   }
-  if (type === "ExPostVerifiedAndMinted") {
+  if (type == "ExPostVerifiedAndMinted") {
     entity.exPostVerifiedAndMinted = activityId;
   }
-  if (type === "ExchangeAnteForPost") {
+  if (type == "ExchangeAnteForPost") {
     entity.exchangeAnteForPost = activityId;
   }
-  if (type === "Retirement") {
+  if (type == "Retirement") {
     entity.retirement = activityId;
   }
-  if (type === "Transfer") {
+  if (type == "Transfer") {
     entity.transfer = activityId;
   }
-  if (type === "VintageMitigationEstimateChanged") {
+  if (type == "VintageMitigationEstimateChanged") {
     entity.vintageMitigationEstimateChanged = activityId;
   }
 

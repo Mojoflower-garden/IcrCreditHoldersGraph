@@ -86,17 +86,29 @@ export function handleCancelledCredits(event: CancelledCreditsEvent): void {
   entity.asset = getAssetId(event.params.tokenId, event.address);
   entity.account = event.params.account.toHexString();
 
-  entity.save();
+  const asset = Asset.load(getAssetId(event.params.tokenId, event.address));
 
-  const vintage = Vintage.load(
-    getVintageId(event.params.tokenId, event.address)
-  );
-  if (vintage) {
-    vintage.totalCancelledAmount = vintage.totalCancelledAmount.plus(
-      BigDecimal.fromString(event.params.amount.toString())
-    );
-    vintage.save();
+  if (asset && asset.vintage) {
+    const vintage = Vintage.load(asset.vintage);
+    if (vintage) {
+      if (asset.type == "ExAnte") {
+        vintage.totalExAnteCancelledAmount =
+          vintage.totalExAnteCancelledAmount.plus(
+            BigDecimal.fromString(event.params.amount.toString())
+          );
+      } else {
+        vintage.totalExPostCancelledAmount =
+          vintage.totalExPostCancelledAmount.plus(
+            BigDecimal.fromString(event.params.amount.toString())
+          );
+      }
+      vintage.save();
+
+      entity.vintage = vintage.id;
+    }
   }
+
+  entity.save();
 
   createActivity(
     event.address,
@@ -153,7 +165,6 @@ export function handleExAnteMinted(event: ExAnteMintedEvent): void {
       exAnteAsset.save();
     }
 
-    exAnteAsset.supply = exAnteAsset.supply.plus(event.params.amount);
     exAnteAsset.save();
   }
 
@@ -161,7 +172,6 @@ export function handleExAnteMinted(event: ExAnteMintedEvent): void {
     event.address,
     "ExAnteMinted",
     entity.id,
-
     event.block.number,
     event.block.timestamp,
     event.transaction.hash,
@@ -198,7 +208,8 @@ export function handleExPostCreated(event: ExPostCreatedEvent): void {
   vintage.estimatedAmount = event.params.estimatedAmount;
   vintage.totalRetiredAmount = BigDecimal.fromString("0");
   vintage.totalRetiredAmount = BigDecimal.fromString("0");
-  vintage.totalCancelledAmount = BigDecimal.fromString("0");
+  vintage.totalExAnteCancelledAmount = BigDecimal.fromString("0");
+  vintage.totalExPostCancelledAmount = BigDecimal.fromString("0");
   vintage.project = event.address;
   vintage.save();
 
@@ -308,7 +319,7 @@ export function handleRetiredVintage(event: RetiredVintageEvent): void {
   retirementAsset.project = event.address;
   retirementAsset.tokenId = event.params.nftTokenId;
   retirementAsset.decimals = 0;
-  retirementAsset.serialization = vintage !== null ? vintage.serialization : "";
+  retirementAsset.serialization = vintage != null ? vintage.serialization : "";
   retirementAsset.type = "RetirementCertificate";
   retirementAsset.supply = BigInt.fromI32(1);
   retirementAsset.vintage = getVintageId(event.params.tokenId, event.address);

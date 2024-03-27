@@ -249,8 +249,8 @@ export class Vintage extends Entity {
     this.set("totalRetiredAmount", Value.fromBigDecimal(value));
   }
 
-  get totalCancelledAmount(): BigDecimal {
-    let value = this.get("totalCancelledAmount");
+  get totalExPostCancelledAmount(): BigDecimal {
+    let value = this.get("totalExPostCancelledAmount");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -258,8 +258,21 @@ export class Vintage extends Entity {
     }
   }
 
-  set totalCancelledAmount(value: BigDecimal) {
-    this.set("totalCancelledAmount", Value.fromBigDecimal(value));
+  set totalExPostCancelledAmount(value: BigDecimal) {
+    this.set("totalExPostCancelledAmount", Value.fromBigDecimal(value));
+  }
+
+  get totalExAnteCancelledAmount(): BigDecimal {
+    let value = this.get("totalExAnteCancelledAmount");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set totalExAnteCancelledAmount(value: BigDecimal) {
+    this.set("totalExAnteCancelledAmount", Value.fromBigDecimal(value));
   }
 
   get retirementCertificates(): RetirementLoader {
@@ -267,6 +280,14 @@ export class Vintage extends Entity {
       "Vintage",
       this.get("id")!.toString(),
       "retirementCertificates",
+    );
+  }
+
+  get cancellations(): CancelledCreditsLoader {
+    return new CancelledCreditsLoader(
+      "Vintage",
+      this.get("id")!.toString(),
+      "cancellations",
     );
   }
 
@@ -457,6 +478,14 @@ export class Asset extends Entity {
 
   set vintage(value: string) {
     this.set("vintage", Value.fromString(value));
+  }
+
+  get cancelledCredits(): CancelledCreditsLoader {
+    return new CancelledCreditsLoader(
+      "Asset",
+      this.get("id")!.toString(),
+      "cancelledCredits",
+    );
   }
 }
 
@@ -1491,6 +1520,23 @@ export class CancelledCredits extends Entity {
 
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get vintage(): string | null {
+    let value = this.get("vintage");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set vintage(value: string | null) {
+    if (!value) {
+      this.unset("vintage");
+    } else {
+      this.set("vintage", Value.fromString(<string>value));
+    }
   }
 
   get project(): Bytes | null {
