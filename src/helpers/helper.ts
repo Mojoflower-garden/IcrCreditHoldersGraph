@@ -93,11 +93,16 @@ export function handleTransfer(entity: Transfer): void {
 
   receiver.save();
 
+  if (entity.from.toHexString() == entity.to.toHexString()) {
+    // If sender === receiver then we don't need to update the account balances
+    return;
+  }
   if (entity.asset) {
     const asset = Asset.load(entity.asset!);
     if (asset) {
       let sender = Account.load(entity.from.toHexString());
       let receiver = Account.load(entity.to.toHexString());
+      // If sender === receiver
       let senderAccountBalance = AccountBalance.load(
         getAccountBalanceId(entity.asset!, entity.from.toHexString())
       );
