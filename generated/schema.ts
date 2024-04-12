@@ -275,6 +275,32 @@ export class Vintage extends Entity {
     this.set("totalExAnteCancelledAmount", Value.fromBigDecimal(value));
   }
 
+  get totalExPostIssued(): BigDecimal {
+    let value = this.get("totalExPostIssued");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set totalExPostIssued(value: BigDecimal) {
+    this.set("totalExPostIssued", Value.fromBigDecimal(value));
+  }
+
+  get totalExAnteIssued(): BigDecimal {
+    let value = this.get("totalExAnteIssued");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set totalExAnteIssued(value: BigDecimal) {
+    this.set("totalExAnteIssued", Value.fromBigDecimal(value));
+  }
+
   get retirementCertificates(): RetirementLoader {
     return new RetirementLoader(
       "Vintage",

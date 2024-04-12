@@ -2,7 +2,7 @@ specVersion: 1.0.0
 indexerHints:
   prune: auto
 schema:
-  file: schema.graphql
+  file: ./schema.graphql
 dataSources:
   - kind: ethereum
     name: CarbonContractRegistry
@@ -21,11 +21,11 @@ dataSources:
         - Project
       abis:
         - name: CarbonContractRegistry
-          file: CarbonContractRegistry/abis/CarbonContractRegistry.json
+          file: ./abis/CarbonContractRegistry.json
       eventHandlers:
         - event: ProjectCreated(indexed uint256,indexed address,string)
           handler: handleProjectCreated
-      file: CarbonContractRegistry/CarbonContractRegistry.wasm
+      file: ./src/carbon-contract-registry.ts
 templates:
   - kind: ethereum
     name: ProjectContract
@@ -52,7 +52,7 @@ templates:
         - Retirement
       abis:
         - name: ProjectContract
-          file: ProjectContract/abis/ProjectContract.json
+          file: ./abis/ProjectContract.json
       eventHandlers:
         - event: AdminClawback(indexed address,address,indexed uint256,uint256,indexed uint8)
           handler: handleAdminClawback
@@ -74,4 +74,4 @@ templates:
           handler: handleTransferSingle
         - event: VintageMitigationEstimateChanged(indexed uint256,uint256,uint256,indexed uint8)
           handler: handleVintageMitigationEstimateChanged
-      file: templates/ProjectContract/ProjectContract.wasm
+      file: ./src/project-contract.ts
