@@ -23,6 +23,8 @@ type Vintage @entity {
   totalRetiredAmount: BigDecimal!
   totalExPostCancelledAmount: BigDecimal!
   totalExAnteCancelledAmount: BigDecimal!
+  totalExPostIssued: BigDecimal!
+  totalExAnteIssued: BigDecimal!
 
   retirementCertificates: [Retirement!] @derivedFrom(field: "vintage")
   cancellations: [CancelledCredits!] @derivedFrom(field: "vintage")
