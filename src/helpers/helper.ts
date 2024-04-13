@@ -9,6 +9,7 @@ import {
 } from "../../generated/schema";
 import { ProjectCreated as ProjectCreatedEvent } from "../../generated/CarbonContractRegistry/CarbonContractRegistry";
 import { Address, BigDecimal, BigInt, Bytes } from "@graphprotocol/graph-ts";
+import { dataSource } from "@graphprotocol/graph-ts";
 
 export const DEBASEMENT_BLOCK = BigInt.fromString("55147487");
 
@@ -17,7 +18,9 @@ export function getAmountDebased(
   blockNumber: BigInt
 ): BigInt {
   let amount = currentAmount;
-  if (blockNumber < DEBASEMENT_BLOCK) {
+  let context = dataSource.context();
+  let isDebased = context.getBoolean("IS_DEBASED");
+  if (isDebased && blockNumber < DEBASEMENT_BLOCK) {
     amount = amount.times(BigInt.fromI32(10).pow(18));
   }
   return amount;

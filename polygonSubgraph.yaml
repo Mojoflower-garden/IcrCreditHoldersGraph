@@ -11,6 +11,10 @@ dataSources:
       address: "0x9f87988FF45E9b58ae30fA1685088460125a7d8A"
       abi: CarbonContractRegistry
       startBlock: 42035067
+    context:
+      IS_DEBASED:
+        type: Bool
+        data: true
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

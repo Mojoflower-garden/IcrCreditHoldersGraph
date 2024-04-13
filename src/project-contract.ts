@@ -32,7 +32,6 @@ import {
   getAssetId,
   getVintageId,
   getAccountBalanceId,
-  DEBASEMENT_BLOCK,
   getAmountDebased,
 } from "./helpers/helper";
 
