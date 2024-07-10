@@ -95,20 +95,10 @@ export function handleCancelledCredits(event: CancelledCreditsEvent): void {
     if (vintage) {
       if (asset.type == "ExAnte") {
         vintage.totalExAnteCancelledAmount =
-          vintage.totalExAnteCancelledAmount.plus(
-            getAmountDebased(
-              BigInt.fromString(entity.amount.toString()),
-              event.block.number
-            )
-          );
+          vintage.totalExAnteCancelledAmount.plus(entity.amount);
       } else {
         vintage.totalExPostCancelledAmount =
-          vintage.totalExPostCancelledAmount.plus(
-            getAmountDebased(
-              BigInt.fromString(entity.amount.toString()),
-              event.block.number
-            )
-          );
+          vintage.totalExPostCancelledAmount.plus(entity.amount);
       }
       vintage.save();
 
@@ -138,7 +128,10 @@ export function handleExAnteMinted(event: ExAnteMintedEvent): void {
   entity.exAnteTokenId = event.params.exAnteTokenId;
   entity.exPostTokenId = event.params.exPostTokenId;
   entity.to = event.params.account;
-  entity.amount = event.params.amount;
+  entity.amount = getAmountDebased(
+    BigInt.fromString(event.params.amount.toString()),
+    event.block.number
+  );
 
   entity.blockNumber = event.block.number;
   entity.blockTimestamp = event.block.timestamp;
@@ -178,12 +171,7 @@ export function handleExAnteMinted(event: ExAnteMintedEvent): void {
     const vintage = Vintage.load(exPostAsset.vintage);
 
     if (vintage) {
-      vintage.totalExAnteIssued = vintage.totalExAnteIssued.plus(
-        getAmountDebased(
-          BigInt.fromString(entity.amount.toString()),
-          event.block.number
-        )
-      );
+      vintage.totalExAnteIssued = vintage.totalExAnteIssued.plus(entity.amount);
 
       vintage.save();
     }
@@ -268,7 +256,10 @@ export function handleExPostVerifiedAndMinted(
   );
   entity.projectAddress = event.address;
   entity.tokenId = event.params.tokenId;
-  entity.amount = event.params.amount;
+  entity.amount = getAmountDebased(
+    BigInt.fromString(event.params.amount.toString()),
+    event.block.number
+  );
   entity.amountToAnteHolders = event.params.amountToAnteHolders;
   entity.verificationPeriodStart = event.params.verificationPeriodStart;
   entity.verificationPeriodEnd = event.params.verificationPeriodEnd;
@@ -288,12 +279,7 @@ export function handleExPostVerifiedAndMinted(
   );
 
   if (vintage) {
-    vintage.totalExPostIssued = vintage.totalExPostIssued.plus(
-      getAmountDebased(
-        BigInt.fromString(entity.amount.toString()),
-        event.block.number
-      )
-    );
+    vintage.totalExPostIssued = vintage.totalExPostIssued.plus(entity.amount);
 
     vintage.save();
   }
@@ -407,12 +393,7 @@ export function handleRetiredVintage(event: RetiredVintageEvent): void {
   entity.save();
 
   if (vintage) {
-    vintage.totalRetiredAmount = vintage.totalRetiredAmount.plus(
-      getAmountDebased(
-        BigInt.fromString(entity.amount.toString()),
-        event.block.number
-      )
-    );
+    vintage.totalRetiredAmount = vintage.totalRetiredAmount.plus(entity.amount);
     vintage.save();
   }
 

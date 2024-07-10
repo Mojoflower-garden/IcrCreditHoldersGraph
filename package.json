@@ -19,7 +19,9 @@
     "build:deploy:polygon": "npm run build:polygon && npm run deploy:polygon",
     "build:polygon:test": "graph build ./polygonTestSubgraph.yaml",
     "deploy:polygon:test": "graph deploy --node https://api.thegraph.com/deploy/ skjaldbaka17/test-poly---icr-credit-holders ./polygonTestSubgraph.yaml",
-    "build:deploy:polygon:test": "npm run build:polygon:test && npm run deploy:polygon:test"
+    "build:deploy:polygon:test": "npm run build:polygon:test && npm run deploy:polygon:test",
+    "deploy:alchemy": "graph deploy polygon---icr-credit-holders ./polygonSubgraph.yaml   --version-label v0.0.2   --node https://subgraphs.alchemy.com/api/subgraphs/deploy   --deploy-key PP1cVNCweRaNn   --ipfs https://ipfs.satsuma.xyz",
+    "deploy:alchemy:base": "graph deploy base-sepolia--icr-credit-holders ./baseSepoliaSubgraph.yaml   --version-label v0.0.1   --node https://subgraphs.alchemy.com/api/subgraphs/deploy   --deploy-key 9Tbn4CVJNLWBM   --ipfs https://ipfs.satsuma.xyz"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.68.5",
