@@ -6,15 +6,15 @@ schema:
 dataSources:
   - kind: ethereum
     name: CarbonContractRegistry
-    network: base-sepolia
+    network: matic
     source:
-      address: "0x826b76bA7B9e9e1f19407FBA3d3011E37536dB58"
+      address: "0x0B0fCaCD2336A5f000661fF5E69aA70c28fD526D"
       abi: CarbonContractRegistry
-      startBlock: 8575566
+      startBlock: 51015040
     context:
       IS_DEBASED:
         type: Bool
-        data: false
+        data: true
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -33,7 +33,7 @@ dataSources:
 templates:
   - kind: ethereum
     name: ProjectContract
-    network: base-sepolia
+    network: matic
     source:
       abi: ProjectContract
     mapping:

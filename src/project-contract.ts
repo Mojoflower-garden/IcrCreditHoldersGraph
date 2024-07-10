@@ -96,12 +96,18 @@ export function handleCancelledCredits(event: CancelledCreditsEvent): void {
       if (asset.type == "ExAnte") {
         vintage.totalExAnteCancelledAmount =
           vintage.totalExAnteCancelledAmount.plus(
-            BigDecimal.fromString(entity.amount.toString())
+            getAmountDebased(
+              BigInt.fromString(entity.amount.toString()),
+              event.block.number
+            )
           );
       } else {
         vintage.totalExPostCancelledAmount =
           vintage.totalExPostCancelledAmount.plus(
-            BigDecimal.fromString(entity.amount.toString())
+            getAmountDebased(
+              BigInt.fromString(entity.amount.toString()),
+              event.block.number
+            )
           );
       }
       vintage.save();
@@ -172,8 +178,11 @@ export function handleExAnteMinted(event: ExAnteMintedEvent): void {
     const vintage = Vintage.load(exPostAsset.vintage);
 
     if (vintage) {
-      vintage.totalExAnteIssued.plus(
-        BigDecimal.fromString(entity.amount.toString())
+      vintage.totalExAnteIssued = vintage.totalExAnteIssued.plus(
+        getAmountDebased(
+          BigInt.fromString(entity.amount.toString()),
+          event.block.number
+        )
       );
 
       vintage.save();
@@ -218,12 +227,11 @@ export function handleExPostCreated(event: ExPostCreatedEvent): void {
   vintage.project = event.address;
   vintage.serialization = event.params.serialization;
   vintage.estimatedAmount = event.params.estimatedAmount;
-  vintage.totalRetiredAmount = BigDecimal.fromString("0");
-  vintage.totalRetiredAmount = BigDecimal.fromString("0");
-  vintage.totalExAnteCancelledAmount = BigDecimal.fromString("0");
-  vintage.totalExPostCancelledAmount = BigDecimal.fromString("0");
-  vintage.totalExPostIssued = BigDecimal.fromString("0");
-  vintage.totalExAnteIssued = BigDecimal.fromString("0");
+  vintage.totalRetiredAmount = BigInt.fromString("0");
+  vintage.totalExAnteCancelledAmount = BigInt.fromString("0");
+  vintage.totalExPostCancelledAmount = BigInt.fromString("0");
+  vintage.totalExPostIssued = BigInt.fromString("0");
+  vintage.totalExAnteIssued = BigInt.fromString("0");
   vintage.project = event.address;
   vintage.save();
 
@@ -280,8 +288,11 @@ export function handleExPostVerifiedAndMinted(
   );
 
   if (vintage) {
-    vintage.totalExPostIssued.plus(
-      BigDecimal.fromString(entity.amount.toString())
+    vintage.totalExPostIssued = vintage.totalExPostIssued.plus(
+      getAmountDebased(
+        BigInt.fromString(entity.amount.toString()),
+        event.block.number
+      )
     );
 
     vintage.save();
@@ -397,7 +408,10 @@ export function handleRetiredVintage(event: RetiredVintageEvent): void {
 
   if (vintage) {
     vintage.totalRetiredAmount = vintage.totalRetiredAmount.plus(
-      BigDecimal.fromString(entity.amount.toString())
+      getAmountDebased(
+        BigInt.fromString(entity.amount.toString()),
+        event.block.number
+      )
     );
     vintage.save();
   }

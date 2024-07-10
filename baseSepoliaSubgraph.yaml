@@ -36,7 +36,6 @@ templates:
     network: base-sepolia
     source:
       abi: ProjectContract
-
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
