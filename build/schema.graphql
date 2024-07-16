@@ -98,6 +98,26 @@ type AccountBalance @entity {
   account: Account!
 }
 
+type Transaction @entity(immutable: true) {
+  id: ID!
+  from: Bytes!
+  to: Bytes
+  gasLimit: BigInt!
+  gasPrice: BigInt!
+  hash: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  index: BigInt!
+  nonce: BigInt!
+  value: BigInt!
+  input: Bytes!
+
+  cumulativeGasUsed: BigInt
+  gasUsed: BigInt
+
+  activities: [Activity!]! @derivedFrom(field: "transactionId")
+}
+
 """
 Below are the entities that store the events emitted by the contracts.
 For historical purposes.
@@ -109,6 +129,11 @@ type Activity @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+
+  logIndex: BigInt!
+  transactionLogIndex: BigInt!
+
+  transactionId: Transaction!
 
   project: Project!
   account: Account
