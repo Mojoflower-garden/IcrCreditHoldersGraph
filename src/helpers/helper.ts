@@ -5,10 +5,17 @@ import {
   Activity,
   Asset,
   ProjectCreated,
+  Transaction,
   Transfer,
 } from "../../generated/schema";
 import { ProjectCreated as ProjectCreatedEvent } from "../../generated/CarbonContractRegistry/CarbonContractRegistry";
-import { Address, BigDecimal, BigInt, Bytes } from "@graphprotocol/graph-ts";
+import {
+  Address,
+  BigDecimal,
+  BigInt,
+  Bytes,
+  ethereum,
+} from "@graphprotocol/graph-ts";
 import { dataSource } from "@graphprotocol/graph-ts";
 
 export const DEBASEMENT_BLOCK = BigInt.fromString("55147487");
@@ -30,6 +37,11 @@ export function createProjectCreated(
   event: ProjectCreatedEvent,
   projectId: Bytes
 ): void {
+  const transaction = createTransaction(
+    event.transaction,
+    event.block,
+    event.receipt
+  );
   let entity = new ProjectCreated(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
@@ -53,8 +65,11 @@ export function createProjectCreated(
     event.block.number,
     event.block.timestamp,
     event.transaction.hash,
+    event.logIndex,
+    event.transactionLogIndex,
     null,
-    null
+    null,
+    transaction
   );
 }
 
@@ -198,8 +213,11 @@ export function createActivity(
   blockNumber: BigInt,
   blockTimestamp: BigInt,
   transactionHash: Bytes,
+  logIndex: BigInt,
+  transactionLogIndex: BigInt,
   extrasAccount: string | null,
-  extrasAsset: string | null
+  extrasAsset: string | null,
+  transaction: Transaction
 ): void {
   let entity = new Activity(activityId);
   entity.contractAddress = contractAddress;
@@ -211,6 +229,10 @@ export function createActivity(
 
   entity.account = extrasAccount;
   entity.asset = extrasAsset;
+
+  entity.logIndex = logIndex;
+  entity.transactionLogIndex = transactionLogIndex;
+  entity.transactionId = transaction.id;
 
   if (type == "ProjectCreated") {
     entity.project = activityId;
@@ -244,6 +266,35 @@ export function createActivity(
   }
 
   entity.save();
+}
+
+export function createTransaction(
+  transactionData: ethereum.Transaction,
+  blockData: ethereum.Block,
+  txReceipt: ethereum.TransactionReceipt | null
+): Transaction {
+  const transaction = Transaction.load(transactionData.hash.toHexString());
+
+  if (transaction) return transaction;
+
+  const newTransaction = new Transaction(transactionData.hash.toHexString());
+  newTransaction.from = transactionData.from;
+  newTransaction.to = transactionData.to;
+  newTransaction.gasLimit = transactionData.gasLimit;
+  newTransaction.gasPrice = transactionData.gasPrice;
+  newTransaction.hash = transactionData.hash;
+  newTransaction.blockNumber = blockData.number;
+  newTransaction.blockTimestamp = blockData.timestamp;
+  newTransaction.index = transactionData.index;
+  newTransaction.nonce = transactionData.nonce;
+  newTransaction.value = transactionData.value;
+  newTransaction.input = transactionData.input;
+  newTransaction.cumulativeGasUsed = txReceipt
+    ? txReceipt.cumulativeGasUsed
+    : null;
+  newTransaction.gasUsed = txReceipt ? txReceipt.gasUsed : null;
+  newTransaction.save();
+  return newTransaction;
 }
 
 export function getAssetId(tokenId: BigInt, contractAddress: Address): string {

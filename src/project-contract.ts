@@ -33,9 +33,15 @@ import {
   getVintageId,
   getAccountBalanceId,
   getAmountDebased,
+  createTransaction,
 } from "./helpers/helper";
 
 export function handleAdminClawback(event: AdminClawbackEvent): void {
+  const transaction = createTransaction(
+    event.transaction,
+    event.block,
+    event.receipt
+  );
   let entity = new AdminClawback(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
@@ -63,12 +69,20 @@ export function handleAdminClawback(event: AdminClawbackEvent): void {
     event.block.number,
     event.block.timestamp,
     event.transaction.hash,
+    event.logIndex,
+    event.transactionLogIndex,
     null,
-    entity.asset
+    entity.asset,
+    transaction
   );
 }
 
 export function handleCancelledCredits(event: CancelledCreditsEvent): void {
+  const transaction = createTransaction(
+    event.transaction,
+    event.block,
+    event.receipt
+  );
   let entity = new CancelledCredits(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
@@ -115,12 +129,20 @@ export function handleCancelledCredits(event: CancelledCreditsEvent): void {
     event.block.number,
     event.block.timestamp,
     event.transaction.hash,
+    event.logIndex,
+    event.transactionLogIndex,
     entity.account,
-    entity.asset
+    entity.asset,
+    transaction
   );
 }
 
 export function handleExAnteMinted(event: ExAnteMintedEvent): void {
+  const transaction = createTransaction(
+    event.transaction,
+    event.block,
+    event.receipt
+  );
   let entity = new ExAnteMinted(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
@@ -184,15 +206,24 @@ export function handleExAnteMinted(event: ExAnteMintedEvent): void {
     event.block.number,
     event.block.timestamp,
     event.transaction.hash,
+    event.logIndex,
+    event.transactionLogIndex,
     entity.account,
-    entity.asset
+    entity.asset,
+    transaction
   );
 }
 
 export function handleExPostCreated(event: ExPostCreatedEvent): void {
+  const transaction = createTransaction(
+    event.transaction,
+    event.block,
+    event.receipt
+  );
   let entity = new ExPostCreated(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
+
   entity.projectAddress = event.address;
   entity.tokenId = event.params.tokenId;
   entity.estimatedAmount = event.params.estimatedAmount;
@@ -243,14 +274,22 @@ export function handleExPostCreated(event: ExPostCreatedEvent): void {
     event.block.number,
     event.block.timestamp,
     event.transaction.hash,
+    event.logIndex,
+    event.transactionLogIndex,
     null,
-    entity.asset
+    entity.asset,
+    transaction
   );
 }
 
 export function handleExPostVerifiedAndMinted(
   event: ExPostVerifiedAndMintedEvent
 ): void {
+  const transaction = createTransaction(
+    event.transaction,
+    event.block,
+    event.receipt
+  );
   let entity = new ExPostVerifiedAndMinted(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
@@ -292,14 +331,22 @@ export function handleExPostVerifiedAndMinted(
     event.block.number,
     event.block.timestamp,
     event.transaction.hash,
+    event.logIndex,
+    event.transactionLogIndex,
     null,
-    entity.asset
+    entity.asset,
+    transaction
   );
 }
 
 export function handleExchangeAnteForPost(
   event: ExchangeAnteForPostEvent
 ): void {
+  const transaction = createTransaction(
+    event.transaction,
+    event.block,
+    event.receipt
+  );
   let entity = new ExchangeAnteForPost(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
@@ -326,12 +373,20 @@ export function handleExchangeAnteForPost(
     event.block.number,
     event.block.timestamp,
     event.transaction.hash,
+    event.logIndex,
+    event.transactionLogIndex,
     entity.account,
-    null
+    null,
+    transaction
   );
 }
 
 export function handleRetiredVintage(event: RetiredVintageEvent): void {
+  const transaction = createTransaction(
+    event.transaction,
+    event.block,
+    event.receipt
+  );
   const vintage = Vintage.load(
     getVintageId(event.params.tokenId, event.address)
   );
@@ -405,12 +460,20 @@ export function handleRetiredVintage(event: RetiredVintageEvent): void {
     event.block.number,
     event.block.timestamp,
     event.transaction.hash,
+    event.logIndex,
+    event.transactionLogIndex,
     entity.account,
-    entity.asset
+    entity.asset,
+    transaction
   );
 }
 
 export function handleTransferBatch(event: TransferBatchEvent): void {
+  const transaction = createTransaction(
+    event.transaction,
+    event.block,
+    event.receipt
+  );
   for (let i = 0; i < event.params.ids.length; i++) {
     let entity = new Transfer(
       event.transaction.hash.concatI32(event.logIndex.toI32()).concatI32(i)
@@ -438,13 +501,21 @@ export function handleTransferBatch(event: TransferBatchEvent): void {
       event.block.number,
       event.block.timestamp,
       event.transaction.hash,
+      event.logIndex,
+      event.transactionLogIndex,
       null,
-      entity.asset
+      entity.asset,
+      transaction
     );
   }
 }
 
 export function handleTransferSingle(event: TransferSingleEvent): void {
+  const transaction = createTransaction(
+    event.transaction,
+    event.block,
+    event.receipt
+  );
   let entity = new Transfer(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
@@ -471,14 +542,22 @@ export function handleTransferSingle(event: TransferSingleEvent): void {
     event.block.number,
     event.block.timestamp,
     event.transaction.hash,
+    event.logIndex,
+    event.transactionLogIndex,
     null,
-    entity.asset
+    entity.asset,
+    transaction
   );
 }
 
 export function handleVintageMitigationEstimateChanged(
   event: VintageMitigationEstimateChangedEvent
 ): void {
+  const transaction = createTransaction(
+    event.transaction,
+    event.block,
+    event.receipt
+  );
   let entity = new VintageMitigationEstimateChanged(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
@@ -503,7 +582,10 @@ export function handleVintageMitigationEstimateChanged(
     event.block.number,
     event.block.timestamp,
     event.transaction.hash,
+    event.logIndex,
+    event.transactionLogIndex,
     null,
-    null
+    null,
+    transaction
   );
 }
